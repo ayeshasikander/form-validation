@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Validation Form</title>
+</head>
+
+<body>
+    <form action="/actionPage.php" onsubmit="return validationForm()" method="get" name="myForm">
+        <div class="form-design">
+            <legend>Register</legend>
+            <label for="username">Username:</label>
+            <span class="form-error" id="username-error"></span>
+            <input class="input-field" type="text" id="username" name="name" required />
+
+            <label for="birthday">Birthday:</label>
+            <span class="form-error"></span>
+            <input class="input-field" type="date" id="birthday" name="birthday" />
+
+            <label for="phone">Phone:</label>
+            <span class="form-error" id="phone-error"></span>
+            <input class="input-field" type="tel" id="phone" name="phone" placeholder="xxx-xxx-xxxx" required />
+
+            <label for="email">Email:</label>
+            <span class="form-error" id="email-error"></span>
+            <input class="input-field" type="email" id="email" name="email" required />
+
+            <label for="password">Password</label>
+            <span class="form-error" id="password-error"></span>
+            <input class="input-field" type="password" id="password" name="password" required>
+
+            <label for="confirmPassword">Confirm Password</label>
+            <span class="form-error" id="confirmPassword-error"></span>
+            <input class="input-field" type="password" id="confirmPassword" name="confirmPassword" required>
+
+            <br />
+            <input class="btn" type="submit" value="Submit" />
+        </div>
+    </form>
+
+    <script>
+        function clearError() {
+            errors = document.getElementsByClassName("form-error");
+            for (let item of errors) {
+                item.innerHTML = "";
+            }
+        }
+        function setError(id, error) {
+            document.getElementById(id + "-error").innerHTML = error;
+        }
+
+        function validationForm() {
+            var returnValue = true;
+            clearError();
+
+            var name = document.forms["myForm"]["username"].value;
+            if (name.length < 5) {
+                setError("username", "*Name must be at least 5 characters");
+                returnValue = false;
+            }
+
+            var mail = document.forms["myForm"]["email"].value;
+            var regEx = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            if (!regEx.test(mail)) {
+                setError("email", "*Invalid Email");
+                returnValue = false;
+            }
+
+            var phone = document.forms["myForm"]["phone"].value;
+            var regEx = /^\+?\d{0,3}-?\d{3}-?\d{3}-?\d{4}$/;
+            if (!regEx.test(phone)) {
+                setError("phone", "*Invalid Phone");
+                returnValue = false;
+            } else if (phone.length != 13) {
+                setError("phone", " *Invalid Phone");
+                returnValue = false;
+            }
+
+            var password = document.forms["myForm"]["password"].value;
+            if (
+                password.length < 8 ||
+                !/[a-z]/.test(password) ||
+                !/[A-Z]/.test(password)
+            ) {
+                setError(
+                    "password",
+                    "*Password must be at least 8 characters and include both uppercase and lowercase letters"
+                );
+                returnValue = false;
+            }
+
+            var confirmPassword = document.forms["myForm"]["confirmPassword"].value;
+            if (confirmPassword !== password) {
+                setError("confirmPassword", "*Passwords do not match");
+                returnValue = false;
+            }
+
+            return returnValue;
+        }
+    </script>
+</body>
+
+</html>
